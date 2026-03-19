@@ -26,7 +26,6 @@ export default function LogoutBtn() {
   }
   return (
     <Button 
-    className="w-24"
     variant="outline"
     onClick={() => handleLogOut()}
     disabled={loading}

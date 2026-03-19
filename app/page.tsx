@@ -1,5 +1,5 @@
 'use client';
-import { createNote, getNote, updateNote } from "@/action/note";
+import { createNote, getLatestNoteId, getNote, getNotes, updateNote } from "@/action/note";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { v4 } from "uuid";
@@ -11,10 +11,10 @@ import { NotesContext } from "@/provider/notes-provider";
 
 // homepage boilerplate
 export default function HomePage() {
-  const [noteText, setNote] = useState("");
+  const [noteText, setNoteText] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { notes } = useContext(NotesContext);
+  const { notes: notebook, setNotes } = useContext(NotesContext);
   const didMount = useRef(false)
   const hasFetch = useRef(false)
 
@@ -26,20 +26,35 @@ export default function HomePage() {
       return;
     }
     toast.success("Note created successfully");
+    const notes = await getNotes()
+    if(!notes){
+      toast.error("An error occurred")
+      return
+    }
+    setNotes(notes)
     router.push(`?id=${res?.note.id}`);
-
-    console.log(res);
   }
 
   async function handleUpdateNote() {
-    console.log("Updating note with content:", noteText);
     // Here you would call your API to update the note in the database
-  
+    
     const noteId = searchParams.get("id");
+    const cpyNotebook = notebook
     if(!noteId) return
-    const res = updateNote({id: noteId, text: noteText})
-
-    if(!res) toast.error("Error Saving Note")
+    const currNote = cpyNotebook.filter(note => note.id === noteId)[0];
+    if(currNote?.text === noteText) return
+    const res = await updateNote({id: noteId, text: noteText})
+    
+    
+    if(!res) {
+      toast.error("Error Saving Note")
+      return
+    }
+    const editNote = [res, ...cpyNotebook.filter(note => note.id !== noteId)]
+    setNotes(editNote)
+      
+    console.log("Updating note with content:", noteText);
+    console.log(editNote)
     
   }
 
@@ -62,15 +77,18 @@ export default function HomePage() {
       console.log("Fetching note with id:", noteId);
       const currentNote = await getNote(noteId);
       if(currentNote == null){
-        router.replace("/")
+        const latestNoteId = await getLatestNoteId();
+        router.replace(`/?id=${latestNoteId}`)
         return
       }
       console.log(currentNote)
-      setNote(currentNote?.text)
+      setNoteText(currentNote?.text)
       hasFetch.current = true
 
+    } else{
+      const latestNoteId = await getLatestNoteId();
+      router.replace(`/?id=${latestNoteId}`)
     }
-    console.log(notes)
   }
   getCurrentNote()
    
@@ -81,6 +99,6 @@ export default function HomePage() {
     <div className="flex gap-3 justify-end"><Button>Ask AI</Button><Button onClick={handleAddNote}>Add new Note</Button></div>
     {/* make textarea fill the rest of the page height, but not overflow  */}
 
-    <Textarea className="flex-1 min-h-0 w-fullmax-w-4xl resize-none p-3 md:p-6 text-lg md:text-base" placeholder="Write your note..." value={noteText} onChange={(e) => setNote(e.target.value)} />
+    <Textarea className="flex-1 min-h-0 w-fullmax-w-4xl resize-none p-3 md:p-6 text-lg md:text-base" placeholder="Write your note..." value={noteText} onChange={(e) => setNoteText(e.target.value)} />
   </div>);
 }

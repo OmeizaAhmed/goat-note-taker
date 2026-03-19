@@ -21,7 +21,7 @@ export default async function Header() {
           className="rounded-full"
           priority
         />
-        <h1 className="text-2xl font-bold leading-6 flex flex-col pb-1">
+        <h1 className="text-xl md:text-2xl font-bold leading-6 flex flex-col pb-1">
           Goat <span>Notes</span>
         </h1>
         
