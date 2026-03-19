@@ -4,11 +4,14 @@ import {Button} from "@/components/ui/button";
 import { ModeToggle } from "@/components/theme-toogle";
 import LogoutBtn from "./logout-btn";
 import { getUser } from "@/auth/server";
+import { SidebarTrigger } from "./ui/sidebar";
 
 export default async function Header() {
   let user = await getUser();
   return (
     <header className="flex h-24 w-full items-center justify-between px-3 sm:px-6 shadow-lg shadow-accent">
+      <div className="flex items-center gap-2">
+      <SidebarTrigger/>
       <Link href="/" className="flex h-full items-center gap-2">
         <Image
           src="/the-kidd.avif"
@@ -23,6 +26,7 @@ export default async function Header() {
         </h1>
         
       </Link>
+      </div>
       <div className="flex gap-4 items-center h-full">{
         user? <LogoutBtn />: <>
         

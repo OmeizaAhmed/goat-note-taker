@@ -3,6 +3,7 @@
 import { createClient } from "@/auth/server"
 import { handleError } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
+import { getUser } from "@/auth/server";
 export async function loginAction({email, password}: {email: string, password: string}) {
   try{
     const { auth } = await createClient();
@@ -55,4 +56,10 @@ export async function logOutAction() {
   } catch(error){
     handleError(error);
   }
+}
+
+export async function getUserClient(){
+  const user = await getUser();
+  return user
+
 }

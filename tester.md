@@ -15,6 +15,8 @@ model User {
   notes Note[]
 }
   
+
+
 model Note {
   id        String     @id @default(uuid())
   text     String
@@ -24,3 +26,8 @@ model Note {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
   }
+
+
+
+
+  
