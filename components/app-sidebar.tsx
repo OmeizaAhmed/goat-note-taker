@@ -12,7 +12,6 @@ import { Note } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import CustomSidebarContent from "./sidebar-content";
-import { Input } from "./ui/input";
 
 export async function AppSidebar() {
   const user = await getUser();
@@ -38,7 +37,6 @@ export async function AppSidebar() {
               user ? <h2 className="text-lg">Your Notes</h2> : <p>Please <Link href="/login" className="underline">login</Link> to see your notes</p>
             }
           </SidebarGroupLabel>
-          <Input placeholder="Search notes..." className="mb-4" type="search"/>
           { user? <CustomSidebarContent notes={notes} /> : null }
         <SidebarGroup />
       </SidebarContent>
