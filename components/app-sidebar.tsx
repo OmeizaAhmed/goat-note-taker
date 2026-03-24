@@ -7,6 +7,7 @@ import {
   SidebarGroupAction,
   SidebarGroupLabel,
   SidebarHeader,
+  
 } from "@/components/ui/sidebar"
 import { Note } from "@/lib/generated/prisma/client";
 import { prisma } from "@/lib/prisma";

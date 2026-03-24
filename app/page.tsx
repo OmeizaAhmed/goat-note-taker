@@ -33,6 +33,7 @@ export default function HomePage() {
     }
     setNotes(notes)
     router.push(`?id=${res?.note.id}`);
+
   }
 
   async function handleUpdateNote() {
@@ -52,9 +53,6 @@ export default function HomePage() {
     }
     const editNote = [res, ...cpyNotebook.filter(note => note.id !== noteId)]
     setNotes(editNote)
-      
-    console.log("Updating note with content:", noteText);
-    console.log(editNote)
     
   }
 
@@ -74,14 +72,12 @@ export default function HomePage() {
     async function getCurrentNote(){
     const noteId = searchParams.get("id");
     if(noteId) {
-      console.log("Fetching note with id:", noteId);
       const currentNote = await getNote(noteId);
       if(currentNote == null){
         const latestNoteId = await getLatestNoteId();
         router.replace(`/?id=${latestNoteId}`)
         return
       }
-      console.log(currentNote)
       setNoteText(currentNote?.text)
       hasFetch.current = true
 

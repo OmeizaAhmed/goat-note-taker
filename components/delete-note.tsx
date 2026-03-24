@@ -16,9 +16,11 @@ import { Trash2 } from "lucide-react"
 import { deleteNote } from "@/action/note"
 import { useContext } from "react"
 import { NotesContext } from "@/provider/notes-provider"
+import { useSidebar } from "./ui/sidebar"
 
 export function DeleteNote({noteId}:{noteId: string}) {
   const {notes, setNotes} = useContext(NotesContext);
+  const {setOpenMobile} = useSidebar();
 
   async function handleDelete() {
     const res = await deleteNote({id:noteId});
@@ -27,6 +29,7 @@ export function DeleteNote({noteId}:{noteId: string}) {
       toast.success("Note deleted successfully")
       const rmNotes = notes.filter(note => note.id !== noteId)
       setNotes(rmNotes)
+      setOpenMobile(false)
     }
   }
 
@@ -34,7 +37,7 @@ export function DeleteNote({noteId}:{noteId: string}) {
   return (
     <AlertDialog >
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="size-7 md:invisible group-hover/item:visible"><Trash2 className="size-3!"/></Button>
+        <Button variant="outline" className="size-7 md:invisible group-hover/item:visible" ><Trash2 className="size-3!"/></Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
